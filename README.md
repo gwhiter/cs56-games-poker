@@ -74,13 +74,14 @@ ant javadoc
 
 Code Assessment
 ===============
-The code is sperated into a multitude of classes.
+The code is seperated into a multitude of classes.
 * The PokerMain class sets up the menu that you first see when the game starts up. It creates three buttons and does the event handling for them as well.
 * One of the buttons creates a PokerServer, which is defined in the PokerChatServer class. This class tries to create a server socket at port 14040. Then, after finding out your IP address using a website (line 45), it prints out your IP address to the stream. The socket continues running indefinitely. Should anything fail, the location of the failure in the code will be printed. 
-* Another button creates the PokerChatClient. BEFORE the PokerChatClient is created, PokerMain asks for the IP address of the server youre tryinto connect to. THEN is creates PokerChatClient. This class then sets up a GUI that asks for a username. Then, it tries to create a socket at port 14040. once it is Setup, the ChatBox GUI is set up. The methods inside deal with receiving and sending message as well. Unlike PokerChatServer, PokerChatClient can be exited.
+* Another button creates the PokerChatClient. BEFORE the PokerChatClient is created, PokerMain asks for the IP address of the server youre try to connect to. THEN is creates PokerChatClient. This class then sets up a GUI that asks for a username. Then, it tries to create a socket at port 14040. once it is Setup, the ChatBox GUI is set up. The methods inside deal with receiving and sending message as well. Unlike PokerChatServer, PokerChatClient can be exited.
 * The last button starts up a new PokerSinglePlayer.
+* PokerSinglePlayer is a subclass of PokerGame. The GUI for PokerSinglePlayer is kept in the PokerGameGUI class. this class is also a subclass of PokerGame. 
+* When the "Play Single Player" button is pushed in PokerMain, first, PokerSinglePlayer sets the chips for the player and the computer opponent. Next, inside the go method, PokerGame's setup method is called. This method makes the player and opponent bet 5 chips to set up the Ante of 5 chips. this "bet" method is located inside of the Player class. Now that the setup method has been called, layoutSubviews and controlButtons is called. both of these methods are located inside of PokerGameGUI.
 * The card class creates all 52 cards, assigning them each a suit and a number. Aces have the value "14" as opposed to "1". The deck class puts all 52 cards into an array, and handles shuffling and drawing cards from the deck.
-
 
 M16 final remarks
 =================
