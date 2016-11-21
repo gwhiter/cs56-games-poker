@@ -43,15 +43,23 @@ public class CompareHands implements Serializable{
      * @return int 
      */
     public int compareHands(){
-	player1Value = calculateValue(cardHand1);
-	player2Value = calculateValue(cardHand2);
+	cardHand1 = findBestOf5WithRank(cardHand1);
+	cardHand2 = findBestOf5WithRank(cardHand2);
+
+	player1Value = cardHand1.remove(6);
+	player2Value = cardHand2.remove(6);
 	
-	if(player1Value>player2Value)
+	//player1Value = calculateValue(cardHand1);
+	//player2Value = calculateValue(cardHand2);
+	
+	if(player1Value>player2Value) //Player 1 has the better hand
 	    return 1;
-	else if(player1Value<player2Value)
+	else if(player1Value<player2Value) //Player 2 has the better hand
 	    return 0;
-	else {
-	    int yourHandValue = sameHandUpdated(cardHand1, 1);
+	else { //Both players have the same type of hand
+	    return resolveTie(cardHand1, cardHand2);
+
+	    /*int yourHandValue = sameHandUpdated(cardHand1, 1);
 	    int otherHandValue = sameHandUpdated(cardHand2, 1);
 	    if(yourHandValue>otherHandValue)
 		return 1;
@@ -90,11 +98,68 @@ public class CompareHands implements Serializable{
 			else if (yourminCard.getValue()<otherminCard.getValue())
 			    return 0;
 			else
-			    return 2;// Only arrives here if cards are exactly the same		
-		    }
-		}
-	    }		
+			return 2;// Only arrives here if cards are exactly the same		
+			}
+			}
+			}		*/
 	}
+    }
+
+    /**
+     *This method takes in 7 cards and figures out which 5 returns the best hand.
+     * @param c1 this is the hand containing 7 cards
+     * @return hand this hand has the 5 best cards. The 6th and final card represents the rank.
+     * the value of the rank card is the rank. the suit is the string "RANK".
+     */
+    public ArrayList<Card> findBestOf5WithRank(ArrayList<Card> hand) {
+	Card firstCard = new Card(0, "FIRST");
+	Card secondCard = new Card(0, "SEC");
+	int locOne = 0;
+	int locTwo = 0;
+	int max = 0;
+	int contender = 0;
+	int maxPlace1 = 0;
+	int maxPlace2 = 0;
+	hand = sortCardHand(hand);
+	for (Card c : hand) {
+	    firstCard = c;
+	    hand.remove(c); 
+	    for (Card d : hand) {
+	        secondCard = d;
+		hand.remove(d);
+		contender = calculateValue(hand);
+		if (contender > max) {
+		    max = contender;
+		    maxPlace1 = locOne;
+		    maxPlace2 = locTwo;
+     		}
+		if (max == 8)
+		    return hand;
+		hand.add(locTwo, secondCard);
+		locTwo = locTwo + 1;
+	    }
+	    hand.add(locOne, firstCard);
+	    locOne = locOne + 1;
+	}
+	hand.remove(maxPlace1);
+	hand.remove(maxPlace2);
+	Card rank = new Card(max, "RANK");
+	hand.add(rank);
+	return hand;
+    }
+
+    /**
+     *This method is used if both hands are the same type
+     *
+     *
+     */
+    private int resolveTie(ArrayList<Card> c1, ArrayList<Card> c2) {
+	int max1 = c1.get(5).getValue();
+	int max2 = c2.get(5).getValue();
+	if (max1 > max2)
+	    return 1;
+	else
+	    return 0;
     }
 
     /**
@@ -103,7 +168,7 @@ public class CompareHands implements Serializable{
      * recursion: Either 1 if called 1st, 2 if called 2nd
      * func won't work as intended if given a different number
      * @param c this is the array of cards
-     * @param recursion MUST BE A 1 OR A 0 IF YOU WANT THIS TO WORK 
+     * @param recursion MUST BE A 1 OR A 2 IF YOU WANT THIS TO WORK 
      * @return int returns an integer
      */
     private int sameHandUpdated(ArrayList<Card> c, int recursion) {
@@ -168,6 +233,26 @@ public class CompareHands implements Serializable{
 	return sortedHand;
     }
 
+    /**
+     *Method sorts the hand
+     * @param player the hand to be sorted
+     * @return sortedCards NOT an arrayList of integers
+     */
+    public ArrayList<Card> sortCardHand(ArrayList<Card> player) {
+	ArrayList<Integer> ranks = new ArrayList<Integer>();
+	ranks = sortHand(player);
+	ArrayList<Card> sortedCards = new ArrayList<Card>();
+	int x = 0;
+	for (Integer i: ranks) {
+	    while ( i != player.get(x).getValue() )
+		x = x + 1;
+	    sortedCards.add(player.get(x));
+	    player.remove(x);
+	    x = 0;			   
+	}
+	return sortedCards;
+    }
+    
     /**
        Returns boolean for if the hand is a straight flush
        * @param player Cards belonging to the player
