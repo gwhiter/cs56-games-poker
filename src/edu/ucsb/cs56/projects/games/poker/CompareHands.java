@@ -159,8 +159,10 @@ public class CompareHands implements Serializable{
 	int max1 = c1.get(5).getValue();
 	int max2 = c2.get(5).getValue();
 	if (max1 > max2)
+	    return 0;
+	else if (max1 < max2)
 	    return 1;
-	else
+	else //when a tie happens IRL, the pot is split. for now though, player 1 wins.
 	    return 0;
     }
 
