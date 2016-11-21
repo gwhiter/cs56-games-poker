@@ -46,8 +46,10 @@ public class CompareHands implements Serializable{
 	cardHand1 = findBestOf5WithRank(cardHand1);
 	cardHand2 = findBestOf5WithRank(cardHand2);
 
-	player1Value = cardHand1.remove(6);
-	player2Value = cardHand2.remove(6);
+	player1Value = cardHand1.get(6).getValue();	
+	cardHand1.remove(player1Value, "RANK");		
+	player2Value = cardHand2.get(6).getValue();
+	cardHand2.remove(player2Value, "RANK");
 	
 	//player1Value = calculateValue(cardHand1);
 	//player2Value = calculateValue(cardHand2);
